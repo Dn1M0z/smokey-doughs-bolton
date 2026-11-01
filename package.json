@@ -1,0 +1,18 @@
+{
+  "name": "smokey-doughs-bolton",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && node scripts/routes.mjs"
+  },
+  "dependencies": {
+    "react": "19.2.0",
+    "react-dom": "19.2.0"
+  },
+  "devDependencies": {
+    "vite": "7.3.1",
+    "@vitejs/plugin-react": "5.0.4",
+    "typescript": "5.8.3"
+  }
+}

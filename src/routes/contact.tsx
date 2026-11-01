@@ -1,0 +1,5 @@
+import {createFileRoute} from '../route';
+import {Header,Footer} from '../components/SiteChrome';
+// @ts-ignore: CI generates route types concurrently.
+export const Route=createFileRoute('/smokey-doughs-bolton/contact')({head:()=>({meta:[{title:'Contact | Smokey Doughs Bolton'}],links:[{rel:'canonical',href:'https://dn1m0z.github.io/smokey-doughs-bolton/contact'}]}),component:Page});
+function Page(){return <><Header/><main className="inner-page"><section className="section contact-page"><h1>Let's talk food.</h1><p>For current opening hours, food allergies, collection and delivery enquiries, contact Smokey Doughs Bolton.</p><a className="big-phone" href="tel:+441204795511">01204 795511</a><address>17-19 Market St<br/>Little Lever, Bolton<br/>BL3 1HH</address><p>Online order submission is not yet available on this website. Call the restaurant to place an order.</p></section></main><Footer/></>}
