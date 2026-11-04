@@ -162,3 +162,43 @@
   .checkout-summary dl{gap:7px;font-size:13px}
   .customiser-total strong{font-size:24px}
 }
+
+/* Restaurant's existing delivery offer and verified social pages. */
+.delivery-promo{
+  display:flex;justify-content:center;align-items:center;gap:12px;
+  background:#fff1dd;color:var(--cherry);text-align:center;
+  padding:11px 20px;font-size:15px;line-height:1.35;letter-spacing:.012em;
+  border-bottom:3px solid var(--cherry);
+}
+.delivery-promo strong{
+  font-family:'Barlow Condensed',Impact,sans-serif;
+  font-weight:900;font-size:23px;letter-spacing:.055em;line-height:1;
+}
+.delivery-promo-star{color:var(--red);font-size:22px;line-height:1}
+.delivery-order-note{
+  display:flex;align-items:center;flex-wrap:wrap;gap:6px 12px;
+  background:var(--cherry);border-left:5px solid #ffdaac;color:#fffafa;
+  padding:18px 20px;margin:18px 0 22px;
+}
+.delivery-order-note strong{font:900 28px/1 'Barlow Condensed',Impact,sans-serif;letter-spacing:.035em}
+.delivery-order-note span{font-weight:700;font-size:16px}
+.delivery-order-note small{flex:1 0 100%;font-size:12px;line-height:1.5;opacity:.85}
+.footer-socials{display:flex;justify-content:flex-start;flex-wrap:wrap;gap:11px;margin-top:24px}
+.footer-socials>a{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  min-height:46px;padding:10px 15px;border:1px solid #ffffff88;
+  color:var(--paper);font-weight:700;font-size:14px;line-height:1.25;
+  border-radius:5px;transition:background .18s,border-color .18s;
+}
+.footer-socials>a:hover{background:#ffffff20;border-color:var(--paper)}
+.footer-socials svg{width:20px;height:20px;flex-shrink:0}
+@media(max-width:680px){
+  .delivery-promo{padding:11px 14px;gap:4px 8px;flex-wrap:wrap;font-size:13px}
+  .delivery-promo strong{font-size:21px}
+  .delivery-promo-star{font-size:18px}
+  .delivery-order-note{padding:16px;margin:16px 0 19px}
+  .delivery-order-note strong{font-size:26px}
+  .delivery-order-note span{font-size:15px}
+  .footer-socials{justify-content:center;margin-top:20px}
+  .footer-socials>a{flex:1 1 130px;max-width:190px}
+}

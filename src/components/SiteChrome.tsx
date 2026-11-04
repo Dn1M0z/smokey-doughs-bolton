@@ -35,7 +35,11 @@ export function Header(){
   },[menuOpen]);
 
   const path=window.location.pathname.replace(/\/$/,'');
-  return <header ref={headerRef} className="nav site-header">
+  return <><div className="delivery-promo" role="note" aria-label="Delivery offer">
+    <span className="delivery-promo-star" aria-hidden="true">✦</span>
+    <strong>FREE DELIVERY</strong>
+    <span>on orders over £12 within 3 miles</span>
+  </div><header ref={headerRef} className="nav site-header">
     <a href="/smokey-doughs-bolton/" className="original-brand" aria-label="Smokey Doughs Bolton home">
       <img src="/smokey-doughs-bolton/assets/original-logo.png" alt="Smokey Doughs Bolton"/>
     </a>
@@ -56,6 +60,6 @@ export function Header(){
         return <a key={link.path} href={href} aria-current={path===href?'page':undefined} onClick={()=>setMenuOpen(false)}>{link.label}</a>;
       })}
     </nav>
-  </header>;
+  </header></>;
 }
 export function Footer(){return <PosterFooter/>}
