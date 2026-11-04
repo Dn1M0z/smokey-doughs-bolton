@@ -1,23 +1,72 @@
-name: Import Smokey Doughs assets
+name: Import original Smokey Doughs assets
 on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/import-assets.yml'
   workflow_dispatch:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 jobs:
-  import:
+  import-and-deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
-      - name: Download image
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Import and verify assets
+        shell: bash
         run: |
+          set -euo pipefail
           mkdir -p public/assets
-          curl --fail -L 'https://d2ol7oe51mr4n9.cloudfront.net/user_2y3C6d3x66EITVj2NwalIexq0yN/a2061bb1-9378-4e9c-8e07-6c661fe7309c.webp' -o public/assets/pizza.webp
-      - name: Commit
+          while IFS='|' read -r name identifier checksum; do
+            extension="${name##*.}"
+            curl --fail --location --retry 3 --silent --show-error "https://d2ol7oe51mr4n9.cloudfront.net/user_2y3C6d3x66EITVj2NwalIexq0yN/${identifier}.${extension}" -o "public/assets/${name}"
+            echo "${checksum}  public/assets/${name}" | sha256sum --check --status
+            echo "Verified ${name}"
+          done <<'ASSET_LIST'
+          burger.webp|ce444d54-03a3-4547-8af0-79e4fea4f75f|387e00cf2f8d981b75deb5b5de184e5bfe798d5565df4da33ef039ccffe52c01
+          cover.jpg|c8b5ac9f-8b31-45ff-b7c2-6feaec394357|04e90be5e5ed907bc68a2e9008171b8f4895567891c3cbf6420d65da9fa05831
+          feast.webp|19774a74-b495-4720-b3e2-090b2f22483f|c2357f4992bb8f45717843cd1d6d050ad0f70fc4236916745b8d117799a3af1d
+          hero.mp4|51171a6b-9a12-46eb-8554-fa6093ef8bdf|ddfd907b54af62a9e41b1113769841bc94e2cfafd346bb54d0de45bf0c0a343c
+          mark.webp|7e13e06e-93ca-4197-8636-ec5d555cd712|a4b03e05997bc485d7196e8bac79616b8393fb19740dccf105db96e76cc59b85
+          og.jpg|f9e6294a-1f39-43ff-9e20-6974318a31bd|fc8a9d61c42b6583bfdcae3448dcd9173fc06ec68afbd1a507e77dd2c0788370
+          original-logo.png|e277bb9a-8b68-402a-8cd5-59b15149e564|a7ecec81e23fee074fd6412525f99bd87fdd9896400fa8c0558bd0bb1b2907be
+          pizza.webp|a2061bb1-9378-4e9c-8e07-6c661fe7309c|591c759430ba84b75082a2cecce9376c92aed0f688ed41d51fc6457bbb8f1a8e
+          poster.webp|a6eba7ea-9c7c-46c7-8d32-4ab46034bbc9|721158e97bc5748845d6fe2bc11b845023da8fc51f86d6c7c6ac9710b06feff7
+          sides.webp|9e2490b5-b3ad-4ef3-a83d-9a6a047f2a30|5203e80366ead053ed31d5dfdc2550d6d63e29b544bfd8b144788582932529c4
+          texture.webp|21025ee0-76db-4af2-97ef-e1b8ebd06df4|6da300f7e88d6d589e301cebdc6b8f851d08007458363b94247b743d2f883146
+          ASSET_LIST
+      - name: Commit originals to repository
+        shell: bash
         run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add public/assets
-          git commit -m 'Import original images' || exit 0
-          git push
+          if ! git diff --cached --quiet; then
+            git commit -m "Restore original Higgsfield website assets"
+            git push origin HEAD:main
+          fi
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Build website
+        run: npm run build
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Upload built website
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: ./dist
+      - name: Deploy website
+        id: deployment
+        uses: actions/deploy-pages@v4
