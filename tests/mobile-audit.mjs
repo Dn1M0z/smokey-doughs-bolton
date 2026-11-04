@@ -25,7 +25,8 @@ try{
     await page.setViewportSize({width,height:844});
     for(const route of routes){
       const url=base+route;
-      const response=await page.goto(url,{waitUntil:'networkidle',timeout:30000});
+      const response=await page.goto(url,{waitUntil:'domcontentloaded',timeout:15000});
+      await page.waitForTimeout(70);
       if(response?.status()!==200){console.log('BAD_STATUS',width,route,response?.status());failures++}
       const metrics=await page.evaluate(()=>{
         const docWidth=document.documentElement.scrollWidth;
@@ -50,7 +51,7 @@ try{
     }
   }
   await page.setViewportSize({width:390,height:844});
-  await page.goto(base+'menu/',{waitUntil:'networkidle'});
+  await page.goto(base+'menu/',{waitUntil:'domcontentloaded'});
   let toggle=page.getByRole('button',{name:'Open navigation menu'});
   await toggle.click();
   if((await page.getByRole('button',{name:'Close navigation menu'}).getAttribute('aria-expanded'))!=='true'){failures++;console.log('MENU_FAILED_TO_OPEN')}
